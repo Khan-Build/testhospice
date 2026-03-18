@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>HOSPITALI</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #0a2540, #1e3c72);
+  color: white;
+  text-align: center;
+}
+
+.container {
+  padding: 20px;
+}
+
+.title {
+  font-size: 50px;
+  color: #4fc3f7;
+  animation: fadeIn 2s ease-in-out;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.nav button {
+  margin: 10px;
+  padding: 10px 20px;
+  border: none;
+  background: #0288d1;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.nav button:hover {
+  background: #03a9f4;
+  transform: scale(1.1);
+}
+
+.user-info {
+  color: #b3e5fc;
+  margin: 10px 0;
+  font-size: 14px;
+}
+
+.card {
+  background: rgba(255,255,255,0.05);
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 15px;
+  width: 320px;
+  backdrop-filter: blur(10px);
+  animation: slideUp 0.8s ease;
+}
+
+input, textarea, select {
+  width: 90%;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 8px;
+  border: none;
+  background: rgba(255,255,255,0.1);
+  color: rgb(255, 196, 0);
+}
+
+input::placeholder, textarea::placeholder {
+  color: #b3e5fc;
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  background: #0288d1;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 5px;
+}
+
+button:hover {
+  background: #03a9f4;
+}
+
+.page {
+  display: none;
+}
+
+.page.active {
+  display: block;
+}
+
+.agent-flow {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #b3e5fc;
+  animation: pulse 2s infinite;
+}
+
+.checkbox-group {
+  text-align: left;
+  display: inline-block;
+  margin: 10px;
+}
+
+.checkbox-group label {
+  display: block;
+  margin: 8px 0;
+  cursor: pointer;
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: auto;
+  margin-right: 8px;
+}
+
+.loading {
+  color: #4fc3f7;
+  font-style: italic;
+}
+
+.priority-high {
+  color: #ff5252;
+  font-weight: bold;
+}
+
+.priority-medium {
+  color: #ffc107;
+  font-weight: bold;
+}
+
+.priority-low {
+  color: #4caf50;
+  font-weight: bold;
+}
+
+.decision {
+  background: rgba(79, 195, 247, 0.1);
+  padding: 15px;
+  border-radius: 10px;
+  margin: 15px 0;
+  text-align: left;
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@keyframes slideUp {
+  from {transform: translateY(40px); opacity: 0;}
+  to {transform: translateY(0); opacity: 1;}
+}
+
+@keyframes pulse {
+  0% {opacity: 0.5;}
+  100% {opacity: 1;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1 class="title">HOSPITALI</h1>
+  <div class="user-info" id="userInfo"></div>
+
+  <div class="nav" id="navBar">
+    <button onclick="showPage('signup')">Sign Up</button>
+  </div>
+
+  <!-- SIGN UP -->
+  <div id="signup" class="card page active">
+    <h2>Create Account</h2>
+    <input type="text" id="username" placeholder="Username">
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="signup()">Sign Up</button>
+  </div>
+
+  <!-- MEDICAL INFORMATION -->
+  <div id="medical-info" class="card page">
+    <h2>Medical Information</h2>
+    
+    <input type="number" id="age" placeholder="Age" min="1" max="120">
+    
+    <input type="text" id="allergies" placeholder="Allergies (comma separated)">
+    
+    <textarea id="medical-history" placeholder="Medical History"></textarea>
+    
+    <h3>Lifestyle Habits</h3>
+    <div class="checkbox-group">
+      <label><input type="checkbox" id="smoking"> Smoking</label>
+      <label><input type="checkbox" id="drinking"> Alcohol Consumption</label>
+      <label><input type="checkbox" id="exercise"> Regular Exercise</label>
+    </div>
+
+    <select id="risk-factor">
+      <option>Risk Factor</option>
+      <option>None</option>
+      <option>Diabetes</option>
+      <option>Hypertension</option>
+      <option>Heart Disease</option>
+      <option>Cancer</option>
+      <option>Asthma</option>
+    </select>
+
+    <textarea id="cancer-info" placeholder="If cancer selected, provide details (type, stage, treatment)"></textarea>
+
+    <button onclick="saveMedicalInfo()">Continue to Dashboard</button>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard" class="card page">
+    <h2>Patient Analysis</h2>
+    <input type="number" id="analysis-age" placeholder="Age">
+    <textarea id="symptoms" placeholder="Symptoms (describe what you're experiencing)"></textarea>
+
+    <select id="current-risk-factor">
+      <option>Select Risk Factor</option>
+      <option>None</option>
+      <option>Diabetes</option>
+      <option>Hypertension</option>
+      <option>Heart Disease</option>
+      <option>Cancer</option>
+      <option>Asthma</option>
+    </select>
+
+    <button onclick="runAnalysis()">Run Analysis</button>
+
+    <div id="results"></div>
+
+    <div class="agent-flow">
+      Health → Resource → Ethics → Judge
+    </div>
+
+    <button onclick="logout()">Logout</button>
+  </div>
+
+</div>
+
+<script>
+// Show page function
+function showPage(pageId) {
+  let pages = document.querySelectorAll(".page");
+  pages.forEach(page => page.classList.remove("active"));
+  document.getElementById(pageId).classList.add("active");
+}
+
+// Sign up button
+function signup() {
+  // Basic validation
+  let username = document.getElementById("username").value;
+  let email = document.getElementById("email").value;
+  let password = document.getElementById("password").value;
+  if (!username || !email || !password) {
+    alert("Please fill in all fields!");
+    return;
+  }
+  showPage("medical-info");
+}
+
+// Save medical info
+function saveMedicalInfo() {
+  let age = document.getElementById("age").value;
+  let allergies = document.getElementById("allergies").value;
+  if (!age || !allergies) {
+    alert("Please fill in age and allergies!");
+    return;
+  }
+  showPage("dashboard");
+}
+
+// Run analysis
+function runAnalysis() {
+  let age = document.getElementById("analysis-age").value;
+  let symptoms = document.getElementById("symptoms").value;
+  if (!age || !symptoms) {
+    alert("Please fill in age and symptoms!");
+    return;
+  }
+  let resultsDiv = document.getElementById("results");
+  resultsDiv.innerHTML = `
+    <div class="decision">
+      <h3>Urgency Assessment</h3>
+      <p>Priority: <span class="priority-high">HIGH</span></p>
+      <p><b>Assessment:</b> Immediate attention required</p>
+      <p><b>Risk Score:</b> 80/100</p>
+      <p><b>Recommendation:</b> Hospital visit advised</p>
+    </div>
+  `;
+}
+
+// Logout
+function logout() {
+  showPage("signup");
+}
+</script>
+
+</body>
+</html>
